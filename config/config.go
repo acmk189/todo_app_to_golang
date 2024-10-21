@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 
+	"github.com/acmk189/golang_udemy_todo_app/utils"
 	"gopkg.in/go-ini/ini.v1"
 )
 
@@ -17,6 +18,7 @@ var Config ConfigList
 
 func init() {
 	LoadConfig()
+	utils.LoggingSettings(Config.LogFile)
 }
 
 func LoadConfig() {
