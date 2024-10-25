@@ -15,7 +15,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			generateHTML(w, nil, "layout", "public_navbar", "signup")
 		} else {
-			http.Redirect(w, r, "/todos", 302)
+			http.Redirect(w, r, "/todos", http.StatusFound)
 		}
 	} else if r.Method == "POST" {
 		//　入力フォームから取得したデータを解析(暗記)
@@ -36,7 +36,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// topページにリダイレクト
-		http.Redirect(w, r, "/", 302)
+		http.Redirect(w, r, "/", http.StatusFound)
 	}
 }
 
@@ -46,7 +46,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		generateHTML(w, nil, "layout", "public_navbar", "login")
 	} else {
-		http.Redirect(w, r, "/todos", 302)
+		http.Redirect(w, r, "/todos", http.StatusFound)
 	}
 }
 
@@ -57,7 +57,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		// エラーの場合は認証失敗 -> ログインページにリダイレクト
-		http.Redirect(w, r, "/login", 302)
+		http.Redirect(w, r, "/login", http.StatusFound)
 	}
 	if user.Password == models.Encrypt(r.PostFormValue("password")) {
 		// パスワード認証成功 -> セッション作成
@@ -75,10 +75,10 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 		http.SetCookie(w, &cookie)
 
 		// ログイン成功後リダイレクト(ログイン後ページないので一旦top)
-		http.Redirect(w, r, "/", 302)
+		http.Redirect(w, r, "/", http.StatusFound)
 	} else {
 		// パスワード認証失敗
-		http.Redirect(w, r, "/login", 302)
+		http.Redirect(w, r, "/login", http.StatusFound)
 	}
 }
 
@@ -92,5 +92,5 @@ func logout(w http.ResponseWriter, h *http.Request) {
 		session := models.Session{UUID: cookie.Value}
 		session.DeleteSessionByUUID()
 	}
-	http.Redirect(w, h, "/login", 302)
+	http.Redirect(w, h, "/login", http.StatusFound)
 }
